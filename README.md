@@ -1,17 +1,17 @@
 # BrainRottifyText
 
-A Node.js module that generates random, absurd text strings with a "brain rot" aesthetic.
+A Node.js module that generates random, absurd text strings with a "brain rot" aesthetic. Zero dependencies - uses only built-in Node.js modules.
 
 ## Installation
 
 ```bash
-npm install brain-rottify
+npm install brain-rottify-text
 ```
 
 ## Usage
 
 ```javascript
-const { rottifyText } = require('brain-rottify');
+const { rottifyText } = require('brain-rottify-text');
 
 // Generate a random brain rot phrase
 const random = rottifyText();
@@ -31,6 +31,16 @@ const extreme = rottifyText("Hello world", {
 });
 console.log(extreme); // Output: "H3ll0 w0Rld 💀 no cap why are we here just to suffer lmao 👁️👄👁️"
 ```
+
+## Features
+
+- 🚫 Zero dependencies - uses only Node.js built-in modules
+- 🔄 Transform existing text or generate random phrases
+- 🎯 Configurable intensity levels
+- 🗣️ Multiple slang types (Gen Z, Millennial)
+- 💭 Existential dread phrases
+- 🔣 Glitchy symbols
+- 📱 Internet slang
 
 ## API
 

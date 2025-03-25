@@ -4,7 +4,7 @@
   "description": "A module that generates random, absurd text strings with a \"brain rot\" aesthetic. \n\n Perfect for creating quirky, nonsensical content for social media, memes, or creative projects.",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "node --test tests/*.test.js"
   },
   "repository": {
     "type": "git",
