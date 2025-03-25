@@ -1,0 +1,30 @@
+{
+  "name": "brain-rottify-text",
+  "version": "1.0.0",
+  "description": "A module that generates random, absurd text strings with a \"brain rot\" aesthetic.",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Chromeshades/BrainRottifyText.git"
+  },
+  "keywords": [
+    "BrainRot",
+    "Brain",
+    "Rot",
+    "Millenial",
+    "GenZ",
+    "Generation",
+    "Z",
+    "String",
+    "Generator"
+  ],
+  "author": "Jason Brown",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Chromeshades/BrainRottifyText/issues"
+  },
+  "homepage": "https://github.com/Chromeshades/BrainRottifyText#readme"
+}
