@@ -58,46 +58,10 @@ function rottifyText(inputString, options = {}) {
  * @returns {string} - Random brain rot phrase
  */
 function generateRandomRotPhrase(config) {
-  const phrases = [];
-  
-  // Add slang based on configuration
-  if (config.includeSlang.map(s => s.toLowerCase()).includes('genz')) {
-    phrases.push(...getRandomElements(rottenData.genZSlang, getRandomIntensity(config.rotLevel, 3)));
-  }
-  
-  if (config.includeSlang.map(s => s.toLowerCase()).includes('millennial')) {
-    phrases.push(...getRandomElements(rottenData.millennialSlang, getRandomIntensity(config.rotLevel, 3)));
-  }
-  
-  // Add existential dread if enabled
-  if (config.includeDread) {
-    phrases.push(...getRandomElements(rottenData.existentialDread, getRandomIntensity(config.rotLevel, 2)));
-  }
-  
-  // Add internet slang if enabled
-  if (config.includeInternetNoise) {
-    phrases.push(...getRandomElements(rottenData.internetSlang, getRandomIntensity(config.rotLevel, 3)));
-  }
-  
-  // If no phrases were added (no options selected), add some defaults
-  if (phrases.length === 0) {
-    phrases.push(...getRandomElements([...rottenData.genZSlang, ...rottenData.millennialSlang], 2));
-  }
-  
-  // Shuffle phrases for randomness
+  const phrases = addPhrases(config);
   const shuffledPhrases = shuffleArray(phrases);
-  
-  // Add glitchy symbols if enabled
-  if (config.includeSymbols) {
-    const symbols = getRandomElements(rottenData.glitchySymbols, getRandomIntensity(config.rotLevel, 4));
-    // Insert symbols randomly throughout the phrase
-    for (const symbol of symbols) {
-      const position = Math.floor(Math.random() * (shuffledPhrases.length + 1));
-      shuffledPhrases.splice(position, 0, symbol);
-    }
-  }
-  
-  return shuffledPhrases.join(' ');
+  const result = addSymbols(shuffledPhrases, config);
+  return result.join(' ');
 }
 
 /**
@@ -111,31 +75,7 @@ function transformText(text, config) {
   let result = applyLetterSubstitutions(text, config.rotLevel);
   
   // Collect all the phrases to insert
-  const phrases = [];
-  
-  // Add slang based on configuration
-  if (config.includeSlang.map(s => s.toLowerCase()).includes('genz')) {
-    phrases.push(...getRandomElements(rottenData.genZSlang, getRandomIntensity(config.rotLevel, 2)));
-  }
-  
-  if (config.includeSlang.map(s => s.toLowerCase()).includes('millennial')) {
-    phrases.push(...getRandomElements(rottenData.millennialSlang, getRandomIntensity(config.rotLevel, 2)));
-  }
-  
-  // Add existential dread if enabled
-  if (config.includeDread) {
-    phrases.push(...getRandomElements(rottenData.existentialDread, getRandomIntensity(config.rotLevel, 1)));
-  }
-  
-  // Add internet slang if enabled
-  if (config.includeInternetNoise) {
-    phrases.push(...getRandomElements(rottenData.internetSlang, getRandomIntensity(config.rotLevel, 2)));
-  }
-  
-  // Add glitchy symbols if enabled
-  if (config.includeSymbols) {
-    phrases.push(...getRandomElements(rottenData.glitchySymbols, getRandomIntensity(config.rotLevel, 3)));
-  }
+  const phrases = addPhrases(config);
   
   // If we have phrases to insert, split the text and insert them
   if (phrases.length > 0) {
@@ -173,6 +113,61 @@ function transformText(text, config) {
   }
   
   return result;
+}
+
+/**
+ * Extracts common logic for adding slang, existential dread, and internet slang
+ * @param {Object} config - Configuration options
+ * @returns {Array} - Array of phrases
+ */
+function addPhrases(config) {
+  const phrases = [];
+  
+  // Add slang based on configuration
+  if (config.includeSlang.map(s => s.toLowerCase()).includes('genz')) {
+    phrases.push(...getRandomElements(rottenData.genZSlang, getRandomIntensity(config.rotLevel, 3)));
+  }
+  
+  if (config.includeSlang.map(s => s.toLowerCase()).includes('millennial')) {
+    phrases.push(...getRandomElements(rottenData.millennialSlang, getRandomIntensity(config.rotLevel, 3)));
+  }
+  
+  // Add existential dread if enabled
+  if (config.includeDread) {
+    phrases.push(...getRandomElements(rottenData.existentialDread, getRandomIntensity(config.rotLevel, 2)));
+  }
+  
+  // Add internet slang if enabled
+  if (config.includeInternetNoise) {
+    phrases.push(...getRandomElements(rottenData.internetSlang, getRandomIntensity(config.rotLevel, 3)));
+  }
+  
+  // If no phrases were added (no options selected), add some defaults
+  if (phrases.length === 0) {
+    phrases.push(...getRandomElements([...rottenData.genZSlang, ...rottenData.millennialSlang], 2));
+  }
+  
+  return phrases;
+}
+
+/**
+ * Extracts common logic for adding glitchy symbols
+ * @param {Array} phrases - Array of phrases
+ * @param {Object} config - Configuration options
+ * @returns {Array} - Array of phrases with symbols
+ */
+function addSymbols(phrases, config) {
+  // Add glitchy symbols if enabled
+  if (config.includeSymbols) {
+    const symbols = getRandomElements(rottenData.glitchySymbols, getRandomIntensity(config.rotLevel, 4));
+    // Insert symbols randomly throughout the phrase
+    for (const symbol of symbols) {
+      const position = Math.floor(Math.random() * (phrases.length + 1));
+      phrases.splice(position, 0, symbol);
+    }
+  }
+  
+  return phrases;
 }
 
 /**
