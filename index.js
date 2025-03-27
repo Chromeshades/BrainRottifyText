@@ -107,8 +107,7 @@ function generateRandomRotPhrase(config) {
  * @returns {string} - Transformed text
  */
 function transformText(text, config) {
-  // Apply letter substitutions based on rot level
-  let result = applyLetterSubstitutions(text, config.rotLevel);
+  let result = text;
   
   // Collect all the phrases to insert
   const phrases = [];
@@ -173,49 +172,6 @@ function transformText(text, config) {
   }
   
   return result;
-}
-
-/**
- * Applies letter substitutions based on rot level
- * @param {string} text - Input text
- * @param {number} rotLevel - Level of brain rot intensity
- * @returns {string} - Text with substituted letters
- */
-function applyLetterSubstitutions(text, rotLevel) {
-  // Define substitution patterns based on rot level
-  const substitutions = {
-    a: 'a4@',
-    e: 'e3',
-    i: 'i1!',
-    o: 'o0',
-    s: 's$',
-    t: 't7',
-    l: 'l1',
-    z: 'z2'
-  };
-  
-  // Calculate how aggressive substitutions should be based on rot level (1-10)
-  const substitutionChance = rotLevel / 20; // 5% to 50% chance per eligible character
-  
-  return text.split('').map(char => {
-    const lowerChar = char.toLowerCase();
-    
-    // Check if this character has substitution options
-    if (substitutions[lowerChar] && Math.random() < substitutionChance) {
-      // Get the possible substitutions for this character
-      const options = substitutions[lowerChar];
-      // Randomly select a substitution
-      return options.charAt(Math.floor(Math.random() * options.length));
-    }
-    
-    // Random case flipping based on rot level
-    if (/[a-zA-Z]/.test(char) && Math.random() < (rotLevel / 30)) { // Up to ~33% chance at rotLevel 10
-      return char === char.toUpperCase() ? char.toLowerCase() : char.toUpperCase();
-    }
-    
-    // No substitution
-    return char;
-  }).join('');
 }
 
 /**
