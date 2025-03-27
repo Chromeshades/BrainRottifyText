@@ -19,7 +19,7 @@ console.log(random); // Output: "no cap 💀 Stan"
 
 // Transform an input string with default settings
 const transformed = rottifyText("Hello world");
-console.log(transformed); // Output: "H3llo w0rld"
+console.log(transformed); // Output: "Hello world"
 
 // Configure with options for maximum brain rot
 const extreme = rottifyText("Hello world", {
@@ -29,7 +29,7 @@ const extreme = rottifyText("Hello world", {
   includeSymbols: true,              // Add glitchy symbols
   includeInternetNoise: true         // Add internet slang
 });
-console.log(extreme); // Output: "H3ll0 w0Rld 💀 no cap why are we here just to suffer lmao 👁️👄👁️"
+console.log(extreme); // Output: "Hello world 💀 no cap why are we here just to suffer lmao 👁️👄👁️"
 ```
 
 ## Features
@@ -71,7 +71,7 @@ const { rottifyText } = require('brain-rottify');
 
 // Simple transformation
 console.log(rottifyText("Hello world"));
-// Possible output: "H3llo w0rld"
+// Possible output: "Hello world"
 
 // Generate random brain rot
 console.log(rottifyText());
@@ -87,14 +87,14 @@ console.log(rottifyText("Serious business email", {
   includeSlang: ['GenZ'],
   includeSymbols: true
 }));
-// Possible output: "S3r!ous buS1n3$$ em4il 🤡 no cap yeet 💀"
+// Possible output: "Serious business email 🤡 no cap yeet 💀"
 
 // Add existential dread to your text
 console.log(rottifyText("Monday motivation", {
   rotLevel: 7,
   includeDread: true
 }));
-// Possible output: "M0nday mo7ivation existence is pain we're all just cosmic dust"
+// Possible output: "Monday motivation existence is pain we're all just cosmic dust"
 ```
 
 ## License
