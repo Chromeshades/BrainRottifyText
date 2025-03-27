@@ -35,13 +35,7 @@ try {
  */
 function rottifyText(inputString, options = {}) {
   // Set default options
-  const config = {
-    rotLevel: Math.min(Math.max(options.rotLevel || 5, 1), 10),
-    includeSlang: options.includeSlang || [],
-    includeDread: options.includeDread || false,
-    includeSymbols: options.includeSymbols || false,
-    includeInternetNoise: options.includeInternetNoise || false
-  };
+  const config = setDefaultOptions(options);
 
   // If no input string is provided, generate a random brain rot phrase
   if (!inputString) {
@@ -58,26 +52,7 @@ function rottifyText(inputString, options = {}) {
  * @returns {string} - Random brain rot phrase
  */
 function generateRandomRotPhrase(config) {
-  const phrases = [];
-  
-  // Add slang based on configuration
-  if (config.includeSlang.map(s => s.toLowerCase()).includes('genz')) {
-    phrases.push(...getRandomElements(rottenData.genZSlang, getRandomIntensity(config.rotLevel, 3)));
-  }
-  
-  if (config.includeSlang.map(s => s.toLowerCase()).includes('millennial')) {
-    phrases.push(...getRandomElements(rottenData.millennialSlang, getRandomIntensity(config.rotLevel, 3)));
-  }
-  
-  // Add existential dread if enabled
-  if (config.includeDread) {
-    phrases.push(...getRandomElements(rottenData.existentialDread, getRandomIntensity(config.rotLevel, 2)));
-  }
-  
-  // Add internet slang if enabled
-  if (config.includeInternetNoise) {
-    phrases.push(...getRandomElements(rottenData.internetSlang, getRandomIntensity(config.rotLevel, 3)));
-  }
+  const phrases = addPhrases(config);
   
   // If no phrases were added (no options selected), add some defaults
   if (phrases.length === 0) {
@@ -110,26 +85,7 @@ function transformText(text, config) {
   let result = text;
   
   // Collect all the phrases to insert
-  const phrases = [];
-  
-  // Add slang based on configuration
-  if (config.includeSlang.map(s => s.toLowerCase()).includes('genz')) {
-    phrases.push(...getRandomElements(rottenData.genZSlang, getRandomIntensity(config.rotLevel, 2)));
-  }
-  
-  if (config.includeSlang.map(s => s.toLowerCase()).includes('millennial')) {
-    phrases.push(...getRandomElements(rottenData.millennialSlang, getRandomIntensity(config.rotLevel, 2)));
-  }
-  
-  // Add existential dread if enabled
-  if (config.includeDread) {
-    phrases.push(...getRandomElements(rottenData.existentialDread, getRandomIntensity(config.rotLevel, 1)));
-  }
-  
-  // Add internet slang if enabled
-  if (config.includeInternetNoise) {
-    phrases.push(...getRandomElements(rottenData.internetSlang, getRandomIntensity(config.rotLevel, 2)));
-  }
+  const phrases = addPhrases(config);
   
   // Add glitchy symbols if enabled
   if (config.includeSymbols) {
@@ -138,37 +94,7 @@ function transformText(text, config) {
   
   // If we have phrases to insert, split the text and insert them
   if (phrases.length > 0) {
-    // Shuffle the phrases for randomness
-    const shuffledPhrases = shuffleArray(phrases);
-    
-    // Split the result into words
-    const words = result.split(' ');
-    
-    // If there are too few words, just append the phrases
-    if (words.length <= 1) {
-      return result + ' ' + shuffledPhrases.join(' ');
-    }
-    
-    // Calculate how many phrases to insert (based on rot level)
-    const insertCount = Math.min(
-      shuffledPhrases.length,
-      Math.max(1, Math.floor(config.rotLevel / 10 * words.length))
-    );
-    
-    // Insert phrases at random positions
-    for (let i = 0; i < insertCount; i++) {
-      const phrase = shuffledPhrases[i];
-      // Pick a random position between words (avoid putting at very beginning)
-      const position = Math.floor(Math.random() * (words.length - 1)) + 1;
-      words.splice(position, 0, phrase);
-    }
-    
-    // If we have leftover phrases, append them at the end
-    if (insertCount < shuffledPhrases.length) {
-      words.push(...shuffledPhrases.slice(insertCount));
-    }
-    
-    result = words.join(' ');
+    result = shuffleAndInsert(result, phrases, config.rotLevel);
   }
   
   return result;
@@ -219,6 +145,94 @@ function getRandomIntensity(rotLevel, maxCount) {
   const maxElements = Math.max(minElements, Math.ceil(rotLevel / 5));
   
   return Math.floor(Math.random() * (maxElements - minElements + 1)) + minElements;
+}
+
+/**
+ * Extract common logic for adding phrases
+ * @param {Object} config - Configuration options
+ * @returns {Array} - Array of phrases
+ */
+function addPhrases(config) {
+  const phrases = [];
+  
+  // Add slang based on configuration
+  if (config.includeSlang.map(s => s.toLowerCase()).includes('genz')) {
+    phrases.push(...getRandomElements(rottenData.genZSlang, getRandomIntensity(config.rotLevel, 3)));
+  }
+  
+  if (config.includeSlang.map(s => s.toLowerCase()).includes('millennial')) {
+    phrases.push(...getRandomElements(rottenData.millennialSlang, getRandomIntensity(config.rotLevel, 3)));
+  }
+  
+  // Add existential dread if enabled
+  if (config.includeDread) {
+    phrases.push(...getRandomElements(rottenData.existentialDread, getRandomIntensity(config.rotLevel, 2)));
+  }
+  
+  // Add internet slang if enabled
+  if (config.includeInternetNoise) {
+    phrases.push(...getRandomElements(rottenData.internetSlang, getRandomIntensity(config.rotLevel, 3)));
+  }
+  
+  return phrases;
+}
+
+/**
+ * Extract common logic for shuffling and inserting phrases
+ * @param {string} text - Input text to transform
+ * @param {Array} phrases - Array of phrases to insert
+ * @param {number} rotLevel - Level of brain rot intensity (1-10)
+ * @returns {string} - Transformed text
+ */
+function shuffleAndInsert(text, phrases, rotLevel) {
+  // Shuffle the phrases for randomness
+  const shuffledPhrases = shuffleArray(phrases);
+  
+  // Split the result into words
+  const words = text.split(' ');
+  
+  // If there are too few words, just append the phrases
+  if (words.length <= 1) {
+    return text + ' ' + shuffledPhrases.join(' ');
+  }
+  
+  // Calculate how many phrases to insert (based on rot level)
+  const insertCount = Math.min(
+    shuffledPhrases.length,
+    Math.max(1, Math.floor(rotLevel / 10 * words.length))
+  );
+  
+  // Insert phrases at random positions
+  for (let i = 0; i < insertCount; i++) {
+    const phrase = shuffledPhrases[i];
+    // Pick a random position between words (avoid putting at very beginning)
+    const position = Math.floor(Math.random() * (words.length - 1)) + 1;
+    words.splice(position, 0, phrase);
+  }
+  
+  // If we have leftover phrases, append them at the end
+  if (insertCount < shuffledPhrases.length) {
+    words.push(...shuffledPhrases.slice(insertCount));
+  }
+  
+  return words.join(' ');
+}
+
+/**
+ * Set default options and handle the absence of an input string
+ * @param {Object} options - Configuration options
+ * @returns {Object} - Configuration options with defaults set
+ */
+function setDefaultOptions(options) {
+  return {
+    rotLevel: Math.min(Math.max(options.rotLevel || 5, 1), 10),
+    includeSlang: options.includeSlang || [],
+    includeDread: options.includeDread || true,
+    includeSymbols: options.includeSymbols || false,
+    includeInternetNoise: options.includeInternetNoise || true
+    
+
+  };
 }
 
 // Export the main function
