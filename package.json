@@ -1,6 +1,6 @@
 {
   "name": "brain-rottify-text",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A module that generates random, absurd text strings with a \"brain rot\" aesthetic. \n\n Perfect for creating quirky, nonsensical content for social media, memes, or creative projects.",
   "main": "index.js",
   "scripts": {
